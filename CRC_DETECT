@@ -1,0 +1,17 @@
+event manager applet UPLINKS_UP authorization bypass
+	event track 100 state up
+	action 10 set _UPLINKS_STATE_ eq 1
+
+event manager applet CRC-DETECT4 authorization bypass
+	event interface name TenGigabitEthernet1/1/4 parameter input_errors_crc entry-op ge entry-val 0 entry-type rate average-factor 25 poll-interval 30
+action 10 syslog priority errors msg "Shutting down interface Te1/1/4: Too many CRC errors"
+action 12 if $_UPLINKS_STATE_ eq 1
+action 13 cli command "show interface Te1/1/4 | i CRC"
+action 14 syslog msg $_cli_result
+action 20 cli command "enable"
+action 30 cli command "configure terminal"
+action 40 cli command "interface te 1/1/4"
+action 50 cli command "shutdown"
+action 60 cli command "end"
+action 70 else
+action 80 break
