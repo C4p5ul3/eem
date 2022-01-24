@@ -15,11 +15,15 @@ event manager applet CRC-DETECT4 authorization bypass
 	action 80 exit
 	action 90 end
 !	
+no event manager applet CHECK_UPLINKS_UP authorization bypass
 event manager applet CHECK_UPLINKS_UP
+ action 5 cli command "enable"
  action 10 cli command "show tracking brief" pattern "100*Up"
- action 20 set _UPLINKS_STATE_ "1"
+ action 20 set $_UPLINKS_STATE_ "1"
 !	
+no event manager applet CHECK_UPLINKS_DOWN authorization bypass
 event manager applet CHECK_UPLINKS_DOWN
+ action 5 cli command "enable"
  action 10 cli command "show tracking brief" pattern "100*Down"
- action 20 set _UPLINKS_STATE_ "0"
+ action 20 set $_UPLINKS_STATE_ "0"
 !
